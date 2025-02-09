@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/scheduler.dart';
 
 class FirestoreService {
 
@@ -22,6 +23,17 @@ class FirestoreService {
   }
 
   // update
+  Future<void> updateNote(String docID, String newNote) {
+    return notes.doc(docID).update({
+      'note' : newNote,
+      'timestamp' : Timestamp.now()
+
+    });
+  }
 
   // delete
+  Future<void> deleteNote(String docID)
+  {
+    return notes.doc(docID).delete();
+  }
 }

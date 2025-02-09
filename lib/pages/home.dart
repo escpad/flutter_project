@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:my_first_flutter/services/firestore.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController textController = TextEditingController();
 
   // opens note box
-  void openNoteBox() {
+  void openNoteBox({String? docID}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -30,8 +31,14 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () {
               // add a new note
-              firestoreService.addNote(textController.text);
-
+              if(docID == null)
+              {
+                firestoreService.addNote(textController.text);
+              }
+              else 
+              {
+                firestoreService.updateNote(docID, textController.text);
+              }
               // clear text contoller
               textController.clear();
 
@@ -73,6 +80,21 @@ class _HomePageState extends State<HomePage> {
 
               return ListTile(
                 title: Text(noteText),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Update cog icon button
+                    IconButton(
+                      onPressed: () => openNoteBox(docID: docID),
+                      icon: Icon(MdiIcons.cog)
+                    ),
+                    // Delete button
+                    IconButton(
+                      onPressed: () => firestoreService.deleteNote(docID),
+                      icon: Icon(MdiIcons.trashCan)
+                    ),
+                  ]
+                )
               );
             }
           );
