@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:my_first_flutter/pages/usersettings.dart';
 import 'package:my_first_flutter/services/firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,6 +26,13 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) => AlertDialog(
         content: TextField(
+          style: GoogleFonts.roboto(
+                    textStyle: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18
+                    )
+                  ),
           controller: textController,
         ),
         actions: [
@@ -57,10 +66,32 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notes'),
+        backgroundColor: Colors.white,
+        title: Text(
+                  'Notes',
+                  style: GoogleFonts.raleway(
+                    textStyle: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32
+                    )
+                  ),
+                ),
+        actions: [
+          IconButton(onPressed: (){Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const UserSettings()
+        )
+      );}, icon: Icon(MdiIcons.accountBox))
+        ],
       ),
+      backgroundColor: Colors.white,
       floatingActionButton:
-          FloatingActionButton(onPressed: openNoteBox, child: const Icon(Icons.add)
+          FloatingActionButton(backgroundColor: Colors.blue, onPressed: openNoteBox, child: const Icon(
+            color: Colors.black,
+            Icons.add
+            ),
       ),
       body: StreamBuilder(stream: firestoreService.getNotesStream(),
       builder: (context, snapshot) {
@@ -69,6 +100,7 @@ class _HomePageState extends State<HomePage> {
           List notesList = snapshot.data!.docs;
 
           return ListView.builder(
+
             itemCount: notesList.length,
             itemBuilder: (context, index) {
               DocumentSnapshot document = notesList[index];
@@ -79,7 +111,8 @@ class _HomePageState extends State<HomePage> {
               String noteText = data['note'];
 
               return ListTile(
-                title: Text(noteText),
+                title: Text(noteText,  style: GoogleFonts.roboto(fontWeight: FontWeight.w400,
+                      fontSize: 18)),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
