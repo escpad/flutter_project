@@ -13,7 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   // firestore
   final FirestoreService firestoreService = FirestoreService();
 
@@ -25,40 +24,33 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: TextField(
-          style: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18
-                    )
-                  ),
-          controller: textController,
-        ),
-        actions: [
-          // button to save
-          ElevatedButton(
-            onPressed: () {
-              // add a new note
-              if(docID == null)
-              {
-                firestoreService.addNote(textController.text);
-              }
-              else 
-              {
-                firestoreService.updateNote(docID, textController.text);
-              }
-              // clear text contoller
-              textController.clear();
+          content: TextField(
+            style: GoogleFonts.roboto(
+                textStyle: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18)),
+            controller: textController,
+          ),
+          actions: [
+            // button to save
+            ElevatedButton(
+              onPressed: () {
+                // add a new note
+                if (docID == null) {
+                  firestoreService.addNote(textController.text);
+                } else {
+                  firestoreService.updateNote(docID, textController.text);
+                }
+                // clear text contoller
+                textController.clear();
 
-              // close the box
-              Navigator.pop(context);
-
-            },
-           child: Text('Add'),
-           )
-        ]
-      ),
+                // close the box
+                Navigator.pop(context);
+              },
+              child: Text('Add'),
+            )
+          ]),
     );
   }
 
@@ -68,78 +60,71 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
-                  'Notes',
-                  style: GoogleFonts.raleway(
-                    textStyle: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32
-                    )
-                  ),
-                ),
+          'Notes',
+          style: GoogleFonts.raleway(
+              textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32)),
+        ),
         actions: [
-          IconButton(onPressed: (){Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => const UserSettings()
-        )
-      );}, icon: Icon(MdiIcons.accountBox))
+          // usersettings button
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const UserSettings()));
+              },
+              icon: Icon(MdiIcons.accountBox))
         ],
       ),
       backgroundColor: Colors.white,
-      floatingActionButton:
-          FloatingActionButton(backgroundColor: Colors.blue, onPressed: openNoteBox, child: const Icon(
-            color: Colors.black,
-            Icons.add
-            ),
+
+      // add note button
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        onPressed: openNoteBox,
+        child: const Icon(color: Colors.black, Icons.add),
       ),
-      body: StreamBuilder(stream: firestoreService.getNotesStream(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData)
-        {
-          List notesList = snapshot.data!.docs;
+      body: StreamBuilder(
+          stream: firestoreService.getNotesStream(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List notesList = snapshot.data!.docs;
 
-          return ListView.builder(
+              return ListView.builder(
+                  itemCount: notesList.length,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot document = notesList[index];
+                    String docID = document.id;
 
-            itemCount: notesList.length,
-            itemBuilder: (context, index) {
-              DocumentSnapshot document = notesList[index];
-              String docID = document.id;
+                    Map<String, dynamic> data =
+                        document.data() as Map<String, dynamic>;
+                    String noteText = data['note'];
 
-              Map<String, dynamic> data = 
-                document.data() as Map<String, dynamic>;
-              String noteText = data['note'];
-
-              return ListTile(
-                title: Text(noteText,  style: GoogleFonts.roboto(fontWeight: FontWeight.w400,
-                      fontSize: 18)),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Update cog icon button
-                    IconButton(
-                      onPressed: () => openNoteBox(docID: docID),
-                      icon: Icon(MdiIcons.cog)
-                    ),
-                    // Delete button
-                    IconButton(
-                      onPressed: () => firestoreService.deleteNote(docID),
-                      icon: Icon(MdiIcons.trashCan)
-                    ),
-                  ]
-                )
-              );
+                    return ListTile(
+                        title: Text(noteText,
+                            style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w400, fontSize: 18)),
+                        trailing:
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                          // update cog icon button
+                          IconButton(
+                              onPressed: () => openNoteBox(docID: docID),
+                              icon: Icon(MdiIcons.cog)),
+                          // delete button
+                          IconButton(
+                              onPressed: () =>
+                                  firestoreService.deleteNote(docID),
+                              icon: Icon(MdiIcons.trashCan)),
+                        ]));
+                  });
+            } else {
+              return const Text('No notes');
             }
-          );
-        }
-        else {
-          return const Text('No notes');
-        }
-        
-
-
-      }
-      ),
+          }),
     );
   }
 }
