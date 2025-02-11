@@ -20,16 +20,7 @@ class Login extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 100,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            margin: const EdgeInsets.only(left: 10),
-            decoration: const BoxDecoration(
-                color: Color(0xffF7F7F9), shape: BoxShape.circle),
-          ),
-        ),
+
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -73,7 +64,7 @@ class Login extends StatelessWidget {
       children: [
         Text(
           'Email Address',
-          style: GoogleFonts.raleway(
+          style: GoogleFonts.roboto(
               textStyle: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.normal,
@@ -107,7 +98,7 @@ class Login extends StatelessWidget {
       children: [
         Text(
           'Password',
-          style: GoogleFonts.raleway(
+          style: GoogleFonts.roboto(
               textStyle: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.normal,
@@ -146,7 +137,7 @@ class Login extends StatelessWidget {
             password: _passwordController.text,
             context: context);
       },
-      child: const Text("Sign In"),
+      child: Text("Sign In", style: TextStyle(color: Colors.white)),
     );
   }
 

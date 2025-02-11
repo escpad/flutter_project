@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:my_first_flutter/pages/login.dart';
 
 class UserSettings extends StatelessWidget {
   const UserSettings({super.key});
@@ -28,7 +29,14 @@ class UserSettings extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               OutlinedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => Login(),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                },
                 icon: Icon(
                   MdiIcons.logout,
                   color: Colors.redAccent,
